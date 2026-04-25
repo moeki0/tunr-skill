@@ -14,8 +14,8 @@ Observe what the user is looking at and search screen history via MCP tools. Aut
 Requires [tunr](https://github.com/moeki0/tunr) to be installed and running:
 
 ```bash
-brew install moeki0/tap/tunr
-tunr watch
+brew install moeki0/tunr/tunr
+tunr start
 ```
 
 ## License

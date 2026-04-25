@@ -1,57 +1,57 @@
 ---
-description: ユーザーの画面・音声コンテキストを検索・参照するスキル。ユーザーが「さっき見てたやつ」「画面に出てた」「ブラウザで開いてた」「さっき聞いてた」「動画で言ってた」など画面や音声の内容に言及したとき、またはユーザーの作業文脈を理解するのに画面・音声情報が役立ちそうなときに自動発動する。引数でチャンネル名を指定すると、そのチャンネルを購読する。
+description: Skill for searching and referencing user's screen and audio context. Auto-invokes when the user references something they were looking at ("that page I had open", "what was on screen", "what I was browsing") or listening to ("what they said in the video", "in the meeting"), or when screen/audio context would help understand their request. Pass a channel name as argument to subscribe to that channel.
 ---
 
-# tunr — 画面・音声コンテキスト参照
+# tunr — Screen & Audio Context
 
-ユーザーが画面で見ている情報や聞いている音声を検索・参照する。tunr watch デーモンが記録した画面履歴・音声文字起こしをMCPツールで検索する。
+Search and reference what the user is seeing on screen or hearing via audio. Uses tunr's MCP tools to query screen history and audio transcriptions recorded by the tunr start daemon.
 
-## 引数によるチャンネル購読
+## Channel subscription via arguments
 
-`/tunr:tunr` に引数が渡された場合、チャンネル操作を行う:
+When `/tunr:tunr` is called with arguments, perform channel operations:
 
-- `/tunr:tunr dev` → `subscribe(channel: "dev")` を呼ぶ
-- `/tunr:tunr dev,research` → `subscribe` を `dev` と `research` それぞれに呼ぶ
-- `/tunr:tunr -dev` → `unsubscribe(channel: "dev")` を呼ぶ
-- `/tunr:tunr` (引数なし) → 通常の画面・音声コンテキスト検索
+- `/tunr:tunr dev` → call `subscribe(channel: "dev")`
+- `/tunr:tunr dev,research` → call `subscribe` for both `dev` and `research`
+- `/tunr:tunr -dev` → call `unsubscribe(channel: "dev")`
+- `/tunr:tunr` (no args) → normal screen/audio context search
 
-引数がある場合はチャンネル操作のみ行い、検索は行わない。
+When arguments are provided, only perform channel operations — do not search.
 
-## いつ使うか
+## When to use
 
-- ユーザーが「さっき見てた」「画面に出てた」「ブラウザで開いてた」「あのページ」など画面コンテキストに言及したとき
-- ユーザーが「さっき聞いてた」「動画で言ってた」「ミーティングで話してた」など音声コンテキストに言及したとき
-- ユーザーの発言の背景を理解するために画面・音声情報が役立ちそうなとき
-- ユーザーが何かを参照しているが、具体的なURLやファイルパスを示していないとき
+- User references something on screen: "that page", "what I was looking at", "the browser tab"
+- User references audio content: "what they said", "in the video", "during the meeting"
+- Understanding the user's intent requires knowing what they're currently viewing
+- User refers to something without providing a specific URL or file path
 
-## 手順
+## Steps
 
-1. まず `recent_screens` ツールで直近の画面状態を確認する（デフォルト10分）
-2. 特定のアプリやウィンドウに絞る場合は `app` パラメータを使う（例: `app: "Chrome"`）
-3. 特定のキーワードで探す場合は `search_screen_history` ツールを使う
-4. 音声に関する質問の場合は `recent_audio` で直近の文字起こしを確認する
-5. 特定のキーワードで音声を探す場合は `search_audio` ツールを使う
-6. リアルタイムでチャンネルの通知を受けたい場合は `subscribe(channel)` で購読する
-7. 取得したコンテキストを基に、ユーザーの意図を理解して回答する
+1. Start with `recent_screens` to check recent screen states (default 10 minutes)
+2. Use the `app` parameter to filter by app (e.g. `app: "Chrome"`)
+3. Use `search_screen_history` for keyword-based search
+4. For audio queries, use `recent_audio` for recent transcriptions
+5. Use `search_audio` for keyword search in audio transcriptions
+6. Use `subscribe(channel)` to receive real-time channel notifications
+7. Use the retrieved context to understand the user's intent and respond
 
-## MCP ツール
+## MCP Tools
 
-- `list_channels()` — 利用可能なチャンネル一覧と購読状態を表示
-- `subscribe(channel)` — チャンネルを購読してリアルタイム通知を受信開始
-- `unsubscribe(channel)` — チャンネルの購読を解除
-- `search_screen_history(query, channel?, app?, minutes?, limit?)` — 画面テキストをキーワード検索。`channel` でチャンネルフィルタ
-- `recent_screens(channel?, app?, minutes?, limit?)` — 直近N分の画面状態一覧。`channel` でチャンネルフィルタ
-- `recent_audio(channel?, minutes?, limit?)` — 直近N分の音声文字起こし一覧
-- `search_audio(query, channel?, minutes?, limit?)` — 音声文字起こしをキーワード検索
+- `list_channels()` — list available channels and subscription status
+- `subscribe(channel)` — subscribe to a channel for real-time notifications
+- `unsubscribe(channel)` — unsubscribe from a channel
+- `search_screen_history(query, channel?, app?, minutes?, limit?)` — search screen text by keyword, optionally filter by channel
+- `recent_screens(channel?, app?, minutes?, limit?)` — recent screen states, optionally filter by channel
+- `recent_audio(channel?, minutes?, limit?)` — recent audio transcriptions
+- `search_audio(query, channel?, minutes?, limit?)` — search audio transcriptions by keyword
 
-## チャンネルイベント
+## Channel events
 
-- `user_send` — ユーザーがショートカットで現在の画面を共有
-- `screen` — チャンネルの画面変化通知（購読中のチャンネルのみ）
-- `audio` — チャンネルの音声文字起こし（音声有効かつ購読中のチャンネルのみ）
+- `user_send` — user pressed shortcut to share current screen
+- `screen` — screen content changes (subscribed channels only)
+- `audio` — audio transcription (subscribed channels with audio enabled)
 
-## 注意
+## Notes
 
-- tunr watch デーモンが起動していない場合、ツールは「No screen/audio history available」を返す。その場合はユーザーに `tunr watch` の起動を提案する
-- チャンネルは tunr TUI (`tunr watch`) で作成・管理する。ウィンドウの割り当てもTUIで行う
-- 音声キャプチャにはBlackHoleとマルチ出力デバイスの設定が必要
+- If the tunr start daemon is not running, tools return "No screen/audio history available". Suggest the user run `tunr start`.
+- Channels are created and managed in the tunr TUI (`tunr start`). Window-to-channel assignment is also done in the TUI.
+- Audio capture requires BlackHole and a multi-output audio device.
