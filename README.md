@@ -1,4 +1,4 @@
-# uitocc plugin
+# tunr plugin
 
 > Screen context provider for [Claude Code](https://claude.ai/code) — a Claude Code plugin.
 
@@ -7,15 +7,15 @@ Observe what the user is looking at and search screen history via MCP tools. Aut
 ## Install
 
 ```
-/plugin marketplace add moeki0/claude-code-uitocc
-/plugin install uitocc@uitocc
+/plugin marketplace add moeki0/claude-code-tunr
+/plugin install tunr@tunr
 ```
 
-Requires [uitocc](https://github.com/moeki0/uitocc) to be installed and running:
+Requires [tunr](https://github.com/moeki0/tunr) to be installed and running:
 
 ```bash
-brew install moeki0/tap/uitocc
-uitocc watch
+brew install moeki0/tap/tunr
+tunr watch
 ```
 
 ## License
