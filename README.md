@@ -7,7 +7,7 @@ Observe what the user is looking at and search screen history via MCP tools. Aut
 ## Install
 
 ```
-/plugin marketplace add moeki0/claude-code-tunr
+/plugin marketplace add moeki0/tunr-skill
 /plugin install tunr@tunr
 ```
 
