@@ -1,7 +1,7 @@
 {
   "name": "tunr",
   "description": "Screen context provider for Claude Code — observe what the user is looking at and search screen history via MCP tools.",
-  "version": "0.8.0",
+  "version": "1.2.3",
   "author": {
     "name": "moeki"
   },
