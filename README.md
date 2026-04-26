@@ -2,7 +2,14 @@
 
 > Screen context provider for [Claude Code](https://claude.ai/code) — a Claude Code plugin.
 
-Observe what the user is looking at and search screen history via MCP tools. Auto-invokes when users reference screen content (e.g. "what was I just looking at", "that page I had open").
+Observe what the user is looking at and search screen history via MCP tools.
+
+## Commands
+
+- `/tunr:subscribe <channels>` — Subscribe to channels (e.g. `/tunr:subscribe dev` or `/tunr:subscribe dev,research`)
+- `/tunr:unsubscribe <channels>` — Unsubscribe from channels
+- `/tunr:pause` — Pause all subscriptions (remembered for resume)
+- `/tunr:resume` — Resume paused subscriptions
 
 ## Install
 
